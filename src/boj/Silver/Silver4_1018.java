@@ -10,57 +10,37 @@ public class Silver4_1018 {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int M = Integer.parseInt(st.nextToken());
         int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
 
-        boolean[][] map = new boolean[M][N];
+        char[][] map = new char[N][M];
+        for (int i = 0; i < N; i++) {
+            map[i] = br.readLine().toCharArray();
+        }
 
-        for (int i = 0; i < M; i++) {
-            String str = br.readLine();
-            for (int j = 0; j < N; j++) {
-                if (str.charAt(j) == 'W') {
-                    map[i][j] = true;
-                } else {
-                    map[i][j] = false;
+        int min = 64;
+
+        for (int i = 0; i <= N - 8; i++) {
+            for (int j = 0; j <= M - 8; j++) {
+                int c1 = 0;
+                int c2 = 0;
+
+                for (int x = i; x < i + 8; x++) {
+                    for (int y = j; y < j + 8; y++) {
+                        if ((x + y) % 2 == 0) {
+                            if (map[x][y] != 'W') c1++;
+                            if (map[x][y] != 'B') c2++;
+                        } else {
+                            if (map[x][y] != 'B') c1++;
+                            if (map[x][y] != 'W') c2++;
+                        }
+                    }
                 }
+
+                min = Math.min(min, Math.min(c1, c2));
             }
         }
 
-//        for(boolean[] b : map) {
-//            for(boolean b1 : b) {
-//                System.out.print(b1 + " ");
-//            }
-//            System.out.println();
-//        }
-
-
-        boolean flag;
-        int c1 = 0;
-        int c2 = 0;
-
-        for (int i = 0; i < M; i++) {
-            flag = i % 2 != 0;
-
-            for (int j = 0; j < N; j++) {
-                if (map[i][j] == flag) {
-                    c1++;
-                }
-                flag = !flag;
-            }
-        }
-
-        for (int i = 0; i < M; i++) {
-            flag = i % 2 == 0;
-
-            for (int j = 0; j < N; j++) {
-                if (map[i][j] == flag) {
-                    c2++;
-                }
-                flag = !flag;
-            }
-        }
-
-        System.out.println((M*N) - Math.max(c1, c2));
+        System.out.println(min);
     }
-
 }
