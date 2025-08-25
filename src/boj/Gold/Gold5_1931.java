@@ -45,7 +45,5 @@ public class Gold5_1931 {
 
         System.out.println(stack.size());
 
-
-
     }
 }
