@@ -5,26 +5,24 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-public class Silver3_15651 {
+public class Silver3_15652_retry {
     static int N, M;
     static int[] pick;
     static StringBuilder sb = new StringBuilder();
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
 
         pick = new int[M];
 
-        dfs(0);
+        dfs(1, 0);
 
         System.out.println(sb);
-
     }
 
-    static void dfs(int depth) {
+    static void dfs(int start, int depth) {
         if (depth == M) {
             for (int i = 0; i < M; i++) {
                 sb.append(pick[i]).append(" ");
@@ -33,11 +31,12 @@ public class Silver3_15651 {
             return;
         }
 
-        for (int i = 1; i <= N; i++) {
+        for (int i = start; i <= N; i++) {
             pick[depth] = i;
-            dfs(depth + 1);
+            dfs(i, depth + 1);
         }
     }
+
 }
 /*
 4 2
@@ -46,16 +45,10 @@ public class Silver3_15651 {
 1 2
 1 3
 1 4
-2 1
 2 2
 2 3
 2 4
-3 1
-3 2
 3 3
 3 4
-4 1
-4 2
-4 3
 4 4
  */
