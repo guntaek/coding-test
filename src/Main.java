@@ -2,61 +2,57 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+    static int N, M;
+    static int[] src;
+    static int[] pick;
+    static boolean[] used;
     static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
 
-        int N = Integer.parseInt(br.readLine());
-        int[] ipList = new int[N];
+        src = new int[N];
+        pick = new int[M];
+        used = new boolean[N];
 
-        // IP 주소 정수 변환
+        st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine(), ".");
-            int ip = 0;
-            for (int j = 0; j < 4; j++) {
-                ip |= Integer.parseInt(st.nextToken()) << (24 - 8 * j);
-            }
-            ipList[i] = ip;
+            src[i] = Integer.parseInt(st.nextToken());
         }
 
-        // 최솟값, 최댓값 계산
-        int min = ipList[0];
-        int max = ipList[0];
-        for (int ip : ipList) {
-            min = Math.min(min, ip);
-            max = Math.max(max, ip);
-        }
+//        for (int i = 0; i < N; i++) {
+//            src[i] = i + 1;
+//        }
 
-        // 다른 비트 구하기
-        int diff = min ^ max;
+        Arrays.sort(src);
 
-        // 몇 비트가 다른지 구하기 (shift)만큼은 서로 다르다 => 전체 32비트 중 32 - shift 비트는 같음
-        int shift = 0;
-        while ((diff >> shift) != 0) {
-            shift++;
-        }
+//        dfs(0, 0);
+        dfs(0, 0);
 
-        // 서브넷 마스크
-        // 공통된 비트 수 만큼 1, 나머지는 0으로 만들면 서브넷 마스크
-        int mask = ~((1 << shift) - 1);
+        System.out.println(sb);
 
-        // 네트워크 주소 계산
-        // 아무 IP하나와 서브넷 마스크를 AND 연산 -> 공통된 비트만 남음 (= 네트워크 주소)
-        int network = ipList[0] & mask;
-
-        PrintIP(network);
-        PrintIP(mask);
-
-
-        System.out.print(sb);
     }
 
-    static void PrintIP(int ip) {
-        sb.append((ip >> 24) & 0xFF).append(".")
-                .append((ip >> 16) & 0xFF).append(".")
-                .append((ip >> 8) & 0xFF).append(".")
-                .append(ip & 0xFF).append("\n");
+    static void dfs(int start, int depth) {
+        if (depth == M) {
+            for (int n : pick) {
+                sb.append(n).append(' ');
+            }
+            sb.append('\n');
+            return;
+        }
+
+        int prev = -1;
+
+        for (int i = start; i < N; i++) {
+            if (src[i] == prev) continue;
+            pick[depth] = src[i];
+            prev = src[i];
+            dfs(i, depth + 1);
+        }
     }
 }
